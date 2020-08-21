@@ -7,5 +7,5 @@
   "gui_template": "(optional) src/gui.html",
   "task_location": "workspace_tasks / application_sessions",
   "open_mode": "standalone / image_labeling_tool / video_labeli... / maybe panel ...",
-  "s": ""
+  "isolation": true
 }
