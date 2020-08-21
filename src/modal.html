@@ -1,0 +1,12 @@
+<div>
+    <sly-field title="Choose team and workspace"
+           description="Project will be added to the selected location">
+        <sly-select-tw v-model="state.dest"></sly-select-tw>
+    </sly-field>
+
+    <sly-field title="Project name"
+           description="If the name already exists, it will be auto-renamed
+                        by adding a numerical suffix to the end (e.g. *_01)">
+        <el-input v-model="state.name"></el-input>
+    </sly-field>
+</div>
