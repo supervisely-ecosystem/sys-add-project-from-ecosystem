@@ -1,11 +1,11 @@
 {
-  "name": "Retail objects tagging with search2",
-  "description": "Retail objects tagging (multi-user scenario)",
+  "name": "Add images project",
+  "description": "Add images project from ecosystem",
   "docker_image": "docker.deepsystems.io/supervisely/five/python-runner:apps",
   "main_script": "src/add_images_project.py",
-  "modal_template": "(optional) src/modal.html",
-  "gui_template": "(optional) src/gui.html",
-  "task_location": "workspace_tasks / application_sessions",
-  "open_mode": "standalone / image_labeling_tool / video_labeli... / maybe panel ...",
+  "modal_template": "src/modal.html",
+  "gui_template": null,
+  "task_location": "workspace_tasks",
+  "open_mode": "headless",
   "isolation": true
 }
