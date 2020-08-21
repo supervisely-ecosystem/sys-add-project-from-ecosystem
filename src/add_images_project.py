@@ -1,12 +1,17 @@
 import os
+import json
 import supervisely_lib as sly
 
-print("hello")
 
-github_token = os.environ.get('GITHUB_TOKEN', None)
-github_token = os.environ.get('GITHUB_URL', None)
-github_url = "https://github.com/supervisely-ecosystem/lemons_annotated"
-workspace_id = 47 # os.environ.get('WORKSPACE_ID', None)
+context = json.loads(os.environ.get('CONTEXT', None))
+state = json.loads(os.environ.get('STATE', None))
+
+team_id = state["destination"]["teamId"]
+workspace_id = state["destination"]["workspaceId"]
+name = state["name"]
+
+github_token = context.get("githubToken", None)
+github_url = context["githubUrl"]
 
 dest_dir = "/sly_task_data/repo"
 sly.fs.clean_dir(dest_dir)
