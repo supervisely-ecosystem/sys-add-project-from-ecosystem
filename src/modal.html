@@ -1,12 +1,12 @@
 <div>
     <sly-field title="Choose team and workspace"
-           description="Project will be added to the selected location">
-        <sly-select-tw v-model="state.destination"></sly-select-tw>
+               description="Project will be added to the selected location">
+        <sly-select-team-workspace :team-id.sync="state.teamId" :workspace-id.sync="state.workspaceId"/>
     </sly-field>
 
     <sly-field title="Project name"
            description="If the name already exists, it will be auto-renamed
-                        by adding a numerical suffix to the end (e.g. *_01)">
-        <el-input v-model="state.name"></el-input>
+                        by adding a numerical suffix to the end (e.g. *_07)">
+        <el-input v-model="state.projectName"></el-input>
     </sly-field>
 </div>

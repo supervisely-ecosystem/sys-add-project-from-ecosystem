@@ -6,6 +6,6 @@
   "modal_template": "src/modal.html",
   "gui_template": null,
   "task_location": "workspace_tasks",
-  "open_mode": "headless",
+  "open_mode???": "headless",
   "isolation": true
 }
