@@ -7,5 +7,5 @@
   "gui_template": null,
   "task_location": "workspace_tasks",
   "open_mode???": "headless",
-  "isolation": true
+  "isolate": true
 }
