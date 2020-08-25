@@ -1,5 +1,9 @@
 {
   "name": "Add images project",
+  "type": "app",
+  "categories": [
+    "internal"
+  ],
   "description": "Add images project from ecosystem",
   "docker_image": "docker.deepsystems.io/supervisely/five/python-runner:apps",
   "main_script": "src/add_images_project.py",
