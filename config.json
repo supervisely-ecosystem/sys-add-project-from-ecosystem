@@ -1,6 +1,7 @@
 {
   "name": "Add images project",
   "type": "app",
+  "targetType": "project",
   "categories": [
     "internal"
   ],
