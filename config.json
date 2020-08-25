@@ -11,7 +11,7 @@
   "modal_template_state": {
     "teamId": null,
     "workspaceId": null,
-    "projectName": "",
+    "projectName": ""
   },
   "gui_template": null,
   "task_location": "workspace_tasks",
