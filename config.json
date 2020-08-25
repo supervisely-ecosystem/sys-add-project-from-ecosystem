@@ -3,7 +3,7 @@
   "type": "app",
   "targetType": "project",
   "categories": [
-    "internal"
+    "system"
   ],
   "description": "Add images project from ecosystem",
   "docker_image": "docker.deepsystems.io/supervisely/five/python-runner:apps",
