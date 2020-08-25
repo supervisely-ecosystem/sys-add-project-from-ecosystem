@@ -1,8 +1,8 @@
 <div>
-    <sly-field title="Choose team and workspace"
-               description="Project will be added to the selected location">
-        <sly-select-team-workspace :team-id.sync="state.teamId" :workspace-id.sync="state.workspaceId"/>
-    </sly-field>
+      <sly-select-team-workspace
+        :team-id.sync="state.teamId"
+        :workspace-id.sync="state.workspaceId"
+      />
 
     <sly-field title="Project name"
            description="If the name already exists, it will be auto-renamed
