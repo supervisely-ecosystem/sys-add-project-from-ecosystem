@@ -1,7 +1,6 @@
 {
   "name": "Add images project",
   "type": "app",
-  "targetType": "project",
   "categories": [
     "system"
   ],
@@ -9,6 +8,11 @@
   "docker_image": "docker.deepsystems.io/supervisely/five/python-runner:apps",
   "main_script": "src/add_images_project.py",
   "modal_template": "src/modal.html",
+  "modal_template_state": {
+    "teamId": null,
+    "workspaceId": null,
+    "projectName": '',
+  },
   "gui_template": null,
   "task_location": "workspace_tasks",
   "open_mode???": "headless",
