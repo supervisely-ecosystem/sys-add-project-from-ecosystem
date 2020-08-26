@@ -35,7 +35,7 @@ elif project_type == str(sly.ProjectType.VIDEOS):
 elif project_type == str(sly.ProjectType.VOLUMES):
     raise NotImplementedError("DICOM project")
 else:
-    raise NotImplementedError()
+    raise NotImplementedError("Unknown type: {}".format(project_type))
 
 sly.logger.info("Project info: id={!r}, name={!r}".format(project_id, res_project_name))
 
