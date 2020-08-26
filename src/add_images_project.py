@@ -22,7 +22,7 @@ sly.fs.clean_dir(dest_dir)
 sly.git.download(ecosystem_item_git_url, dest_dir, github_token, ecosystem_item_version, log_progress=True)
 
 api = sly.Api.from_env()
-project_name = sly.fs.get_file_name(ecosystem_item_git_url)
+#project_name = sly.fs.get_file_name(ecosystem_item_git_url)
 
 with open(os.path.join(dest_dir, "project", "meta.json")) as json_file:
     meta_json = json.load(json_file)
