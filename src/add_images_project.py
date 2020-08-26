@@ -27,7 +27,7 @@ project_name = sly.fs.get_file_name(ecosystem_item_git_url)
 with open(os.path.join(dest_dir, "project", "meta.json")) as json_file:
     meta_json = json.load(json_file)
 
-project_type = sly.ProjectMeta.to_json(meta_json).project_type
+project_type = sly.ProjectMeta.from_json(meta_json).project_type
 if project_type == str(sly.ProjectType.IMAGES):
     project_id, res_project_name = sly.upload_project(dest_dir, api, workspace_id, project_name, log_progress=True)
 elif project_type == str(sly.ProjectType.VIDEOS):
