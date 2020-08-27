@@ -16,6 +16,8 @@ sly.logger.info("Script arguments", extra={"team_id: ": team_id,
                                            "ecosystem_item_version: ": ecosystem_item_version,
                                            "github_token: ": github_token})
 
+raise ValueError("Debug error!!!")
+
 dest_dir = "/sly_task_data/repo"
 sly.fs.mkdir(dest_dir)
 sly.fs.clean_dir(dest_dir)
