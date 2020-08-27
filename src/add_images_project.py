@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import supervisely_lib as sly
 
 
@@ -18,7 +19,13 @@ def main():
                                                "ecosystem_item_version: ": ecosystem_item_version,
                                                "github_token: ": github_token})
 
+    #@TODO: remove
+    progress = sly.Progress("Debug progress", total_cnt=20)
+    for i in range(20):
+        time.sleep(1)
+        progress.iters_done_report(1)
     raise ValueError("Debug error!!!")
+
 
     dest_dir = "/sly_task_data/repo"
     sly.fs.mkdir(dest_dir)
