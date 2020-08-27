@@ -20,12 +20,11 @@ def main():
                                                "github_token: ": github_token})
 
     #@TODO: remove
-    progress = sly.Progress("Debug progress", total_cnt=20)
-    for i in range(10):
-        time.sleep(1)
-        progress.iters_done_report(1)
+    # progress = sly.Progress("Debug progress", total_cnt=20)
+    # for i in range(10):
+    #     time.sleep(1)
+    #     progress.iters_done_report(1)
     #raise ValueError("Debug error!!!")
-
 
     dest_dir = "/sly_task_data/repo"
     sly.fs.mkdir(dest_dir)
