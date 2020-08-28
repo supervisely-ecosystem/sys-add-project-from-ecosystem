@@ -4,7 +4,7 @@
   "categories": [
     "system"
   ],
-  "description": "Adds project from ecosystem, works with all project types: images/videos/3d",
+  "description": "Adds project from ecosystem, works with all project types: images/videos/3d/dicom",
   "docker_image": "docker.deepsystems.io/supervisely/five/python-runner:ecosystem_add_images_project",
   "main_script": "src/add_images_project.py",
   "modal_template": "src/modal.html",
