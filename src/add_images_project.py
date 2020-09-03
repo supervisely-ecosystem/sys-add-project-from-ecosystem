@@ -8,8 +8,8 @@ def main():
     team_id = os.environ['modal.state.teamId']
     workspace_id = os.environ['modal.state.workspaceId']
     project_name = os.environ['modal.state.projectName']
-    ecosystem_item_git_url = os.environ['modal.state.ecosystem_item_git_url']
-    ecosystem_item_version = os.environ.get('modal.state.ecosystem_item_version', "master")
+    ecosystem_item_git_url = os.environ['modal.state.ecosystemItemGitUrl']
+    ecosystem_item_version = os.environ.get('modal.state.ecosystemItemVersion', "master")
     github_token = os.environ.get('modal.context.github_token', None)
 
     sly.logger.info("Script arguments", extra={"team_id: ": team_id,
