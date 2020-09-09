@@ -64,8 +64,8 @@ def main():
 
     # to show created project in tasks list (output column)
     sly.logger.info('PROJECT_CREATED', extra={'event_type': sly.EventType.PROJECT_CREATED, 'project_id': project_id})
+    api.set_output_project(project_id, res_project_name)
 
-    #@TODO: set task output
 
 if __name__ == "__main__":
     sly.main_wrapper("main", main)
