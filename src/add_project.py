@@ -9,6 +9,7 @@ from supervisely_lib.io.fs import ensure_base_path, silent_remove, get_file_name
 
 
 def main():
+    task_id = os.environ["TASK_ID"]
     team_id = os.environ['modal.state.teamId']
     workspace_id = os.environ['modal.state.workspaceId']
     project_name = os.environ['modal.state.projectName']
@@ -64,7 +65,7 @@ def main():
 
     # to show created project in tasks list (output column)
     sly.logger.info('PROJECT_CREATED', extra={'event_type': sly.EventType.PROJECT_CREATED, 'project_id': project_id})
-    api.task.set_output_project(project_id, res_project_name)
+    api.task.set_output_project(task_id, project_id, res_project_name)
 
 
 if __name__ == "__main__":
