@@ -7,6 +7,7 @@ import shutil
 import supervisely_lib as sly
 from supervisely_lib.io.fs import ensure_base_path, silent_remove, get_file_name, remove_dir, get_subdirs
 
+
 def main():
     team_id = os.environ['modal.state.teamId']
     workspace_id = os.environ['modal.state.workspaceId']
@@ -29,7 +30,7 @@ def main():
     sly.fs.clean_dir(dest_dir)
 
     tar_path = os.path.join(dest_dir, 'repo.tar.gz')
-    api.app.download_git_archive(ecosystem_item_id, ecosystem_item_version, tar_path, log_progress=True)
+    api.app.download_git_archive(ecosystem_item_id, None, ecosystem_item_version, tar_path, log_progress=True)
     with tarfile.open(tar_path) as archive:
         archive.extractall(dest_dir)
     subdirs = get_subdirs(dest_dir)
