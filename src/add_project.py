@@ -57,6 +57,7 @@ def main():
             #sly.logger.warn("Can not read name from {!r}".format("config.json"))
             #project_name = sly.fs.get_file_name(ecosystem_item_git_url)
 
+    sly.logger.info("Result project name = {!r}".format(project_name))
     with open(os.path.join(dest_dir, "project", "meta.json")) as json_file:
         meta_json = json.load(json_file)
 
