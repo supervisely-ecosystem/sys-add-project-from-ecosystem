@@ -46,7 +46,15 @@ def main():
 
     #sly.git.download(ecosystem_item_git_url, dest_dir, github_token, ecosystem_item_version, log_progress=True)
 
-    project_name = sly.fs.get_file_name(ecosystem_item_git_url)
+    project_name = None
+    with open(os.path.join(dest_dir, "config.json")) as json_file:
+        config_json = json.load(json_file)
+        project_name = config_json["name"]
+
+    if project_name is None:
+        raise KeyError("Can not read name from {!r}".format("config.json"))
+        #sly.logger.warn("Can not read name from {!r}".format("config.json"))
+        #project_name = sly.fs.get_file_name(ecosystem_item_git_url)
 
     with open(os.path.join(dest_dir, "project", "meta.json")) as json_file:
         meta_json = json.load(json_file)
