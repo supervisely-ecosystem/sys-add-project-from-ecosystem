@@ -44,8 +44,6 @@ def main():
     remove_dir(extracted_path)
     silent_remove(tar_path)
 
-    #sly.git.download(ecosystem_item_git_url, dest_dir, github_token, ecosystem_item_version, log_progress=True)
-
     if project_name == "":
         project_name = None
         with open(os.path.join(dest_dir, "config.json")) as json_file:
