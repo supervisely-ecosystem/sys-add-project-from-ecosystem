@@ -5,7 +5,7 @@
     "system"
   ],
   "description": "Adds project from ecosystem, works with all project types: images / videos / 3d / dicom",
-  "docker_image": "docker.deepsystems.io/supervisely/five/base-py-sdk-internal:app",
+  "docker_image": "docker.deepsystems.io/supervisely/five/base-py-sdk-internal:apps",
   "main_script": "src/add_project.py",
   "modal_template": "src/modal.html",
   "modal_template_state": {
