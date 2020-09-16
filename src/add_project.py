@@ -7,8 +7,12 @@ import shutil
 import supervisely_lib as sly
 from supervisely_lib.io.fs import ensure_base_path, silent_remove, get_file_name, remove_dir, get_subdirs
 
+my_app = sly.AppService()
 
-def main():
+
+@my_app.callback("do")
+@sly.timeit
+def do(**kwargs):
     task_id = os.environ["TASK_ID"]
     team_id = os.environ['modal.state.teamId']
     workspace_id = os.environ['modal.state.workspaceId']
@@ -52,8 +56,8 @@ def main():
 
         if project_name is None:
             raise KeyError("Can not read name from {!r}".format("config.json"))
-            #sly.logger.warn("Can not read name from {!r}".format("config.json"))
-            #project_name = sly.fs.get_file_name(ecosystem_item_git_url)
+            # sly.logger.warn("Can not read name from {!r}".format("config.json"))
+            # project_name = sly.fs.get_file_name(ecosystem_item_git_url)
 
     sly.logger.info("Result project name = {!r}".format(project_name))
     with open(os.path.join(dest_dir, "project", "meta.json")) as json_file:
@@ -63,7 +67,8 @@ def main():
     if project_type == str(sly.ProjectType.IMAGES):
         project_id, res_project_name = sly.upload_project(dest_dir, api, workspace_id, project_name, log_progress=True)
     elif project_type == str(sly.ProjectType.VIDEOS):
-        project_id, res_project_name = sly.upload_video_project(dest_dir, api, workspace_id, project_name, log_progress=True)
+        project_id, res_project_name = sly.upload_video_project(dest_dir, api, workspace_id, project_name,
+                                                                log_progress=True)
     elif project_type == str(sly.ProjectType.VOLUMES):
         raise NotImplementedError("DICOM project")
     else:
@@ -74,6 +79,19 @@ def main():
     # to show created project in tasks list (output column)
     sly.logger.info('PROJECT_CREATED', extra={'event_type': sly.EventType.PROJECT_CREATED, 'project_id': project_id})
     api.task.set_output_project(task_id, project_id, res_project_name)
+
+
+def main():
+    initial_events = [
+        {
+            "state": None,
+            "context": None,
+            "command": "do",
+        }
+    ]
+
+    my_app.run(initial_events=initial_events)
+    my_app.wait_all()
 
 
 if __name__ == "__main__":
