@@ -79,7 +79,8 @@ def do(**kwargs):
     # to show created project in tasks list (output column)
     sly.logger.info('PROJECT_CREATED', extra={'event_type': sly.EventType.PROJECT_CREATED, 'project_id': project_id})
     api.task.set_output_project(task_id, project_id, res_project_name)
-
+    my_app.stop()
+    
 
 def main():
     initial_events = [
