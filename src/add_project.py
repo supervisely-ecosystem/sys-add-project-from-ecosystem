@@ -70,7 +70,8 @@ def do(**kwargs):
         project_id, res_project_name = sly.upload_video_project(dest_dir, api, workspace_id, project_name,
                                                                 log_progress=True)
     elif project_type == str(sly.ProjectType.VOLUMES):
-        raise NotImplementedError("DICOM project")
+        project_id, res_project_name = sly.upload_volume_project(dest_dir, api, workspace_id, project_name,
+                                                                log_progress=True)
     else:
         raise NotImplementedError("Unknown project type: {}".format(project_type))
 
