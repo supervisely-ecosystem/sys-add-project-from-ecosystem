@@ -1,13 +1,14 @@
 import os
 import json
-import time
 import tarfile
 import shutil
 
-import supervisely_lib as sly
-from supervisely_lib.io.fs import ensure_base_path, silent_remove, get_file_name, remove_dir, get_subdirs
+import supervisely as sly
+from supervisely.io.fs import silent_remove, remove_dir, get_subdirs
+from supervisely.project.pointcloud_episode_project import upload_pointcloud_episode_project
+from supervisely.app.v1.app_service import AppService
 
-my_app = sly.AppService()
+my_app = AppService()
 
 
 @my_app.callback("do")
@@ -72,6 +73,10 @@ def do(**kwargs):
     elif project_type == str(sly.ProjectType.VOLUMES):
         project_id, res_project_name = sly.upload_volume_project(dest_dir, api, workspace_id, project_name,
                                                                 log_progress=True)
+    elif project_type == str(sly.ProjectType.POINT_CLOUD_EPISODES):
+        dest_dir = os.path.join(dest_dir, "project")
+        project_id, res_project_name = upload_pointcloud_episode_project(dest_dir, api, workspace_id, project_name, 
+                                                                         log_progress=True)
     else:
         raise NotImplementedError("Unknown project type: {}".format(project_type))
 
