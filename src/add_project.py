@@ -4,8 +4,9 @@ import time
 import tarfile
 import shutil
 
-import supervisely_lib as sly
-from supervisely_lib.io.fs import ensure_base_path, silent_remove, get_file_name, remove_dir, get_subdirs
+import supervisely as sly
+from supervisely.io.fs import ensure_base_path, silent_remove, get_file_name, remove_dir, get_subdirs
+from supervisely.project.pointcloud_episode_project import upload_pointcloud_episode_project
 
 my_app = sly.AppService()
 
@@ -73,8 +74,8 @@ def do(**kwargs):
         project_id, res_project_name = sly.upload_volume_project(dest_dir, api, workspace_id, project_name,
                                                                 log_progress=True)
     elif project_type == str(sly.ProjectType.POINT_CLOUD_EPISODES):
-        project_id, res_project_name = sly.upload_pointcloud_episode_project(directory=dest_dir, api=api, workspace_id=workspace_id, 
-                                                                             project_name=project_name, log_progress=True)
+        project_id, res_project_name = upload_pointcloud_episode_project(dest_dir, api, =workspace_id, project_name, 
+                                                                         log_progress=True)
     else:
         raise NotImplementedError("Unknown project type: {}".format(project_type))
 
