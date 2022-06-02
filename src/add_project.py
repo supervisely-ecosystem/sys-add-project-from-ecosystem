@@ -73,8 +73,8 @@ def do(**kwargs):
         project_id, res_project_name = sly.upload_volume_project(dest_dir, api, workspace_id, project_name,
                                                                 log_progress=True)
     elif project_type == str(sly.ProjectType.POINT_CLOUD_EPISODES):
-        project_id, res_project_name = sly.upload_pointcloud_episode_project(dest_dir, api, workspace_id, project_name,
-                                                                log_progress=True)
+        project_id, res_project_name = sly.upload_pointcloud_episode_project(directory=dest_dir, api=api, workspace_id=workspace_id, 
+                                                                             project_name=project_name, log_progress=True)
     else:
         raise NotImplementedError("Unknown project type: {}".format(project_type))
 
