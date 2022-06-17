@@ -74,7 +74,6 @@ def do(**kwargs):
         project_id, res_project_name = sly.upload_volume_project(dest_dir, api, workspace_id, project_name,
                                                                 log_progress=True)
     elif project_type == str(sly.ProjectType.POINT_CLOUD_EPISODES):
-        dest_dir = os.path.join(dest_dir, "project")
         project_id, res_project_name = upload_pointcloud_episode_project(dest_dir, api, workspace_id, project_name, 
                                                                          log_progress=True)
     else:
