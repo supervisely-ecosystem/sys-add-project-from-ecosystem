@@ -5,6 +5,7 @@ import shutil
 
 import supervisely as sly
 from supervisely.io.fs import silent_remove, remove_dir, get_subdirs
+from supervisely.project.pointcloud_project import upload_pointcloud_project
 from supervisely.project.pointcloud_episode_project import upload_pointcloud_episode_project
 from supervisely.app.v1.app_service import AppService
 
@@ -73,6 +74,10 @@ def do(**kwargs):
     elif project_type == str(sly.ProjectType.VOLUMES):
         project_id, res_project_name = sly.upload_volume_project(dest_dir, api, workspace_id, project_name,
                                                                 log_progress=True)
+    elif project_type == str(sly.ProjectType.POINT_CLOUDS):
+        dest_dir = os.path.join(dest_dir, "project")
+        project_id, res_project_name = upload_pointcloud_project(dest_dir, api, workspace_id, project_name, 
+                                                                         log_progress=True)
     elif project_type == str(sly.ProjectType.POINT_CLOUD_EPISODES):
         dest_dir = os.path.join(dest_dir, "project")
         project_id, res_project_name = upload_pointcloud_episode_project(dest_dir, api, workspace_id, project_name, 
