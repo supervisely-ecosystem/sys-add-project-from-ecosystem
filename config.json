@@ -17,5 +17,7 @@
   "task_location": "workspace_tasks",
   "isolate": true,
   "system": true,
+  "icon": "https://user-images.githubusercontent.com/12828725/192745216-b395679c-de58-47a2-963a-b43378b5680b.png",
+  "icon_background": "#FFFFFF",
   "headless": true
 }
