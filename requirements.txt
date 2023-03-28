@@ -1,1 +1,2 @@
-supervisely==6.70.14
+#supervisely==6.70.14
+git+https://github.com/supervisely/supervisely.git@bug_fix_pointcloud_import
