@@ -45,12 +45,7 @@ def do(**kwargs):
     if len(subdirs) != 1:
         raise RuntimeError("Repo is downloaded and extracted, but resulting directory not found")
     extracted_path = os.path.join(dest_dir, subdirs[0])
-
-    github_dir = os.path.join(extracted_path, ".github")
-    sly.logger.debug(f"Trying to remove {github_dir}...")
-    sly.fs.remove_dir(github_dir)
-    list_dir = os.listdir(extracted_path)
-    sly.logger.debug(f"list_dir in extracted_path: {list_dir}")
+    clean_repo(extracted_path)
 
     for filename in os.listdir(extracted_path):
         shutil.move(os.path.join(extracted_path, filename), os.path.join(dest_dir, filename))
@@ -98,7 +93,13 @@ def do(**kwargs):
     sly.logger.info('PROJECT_CREATED', extra={'event_type': sly.EventType.PROJECT_CREATED, 'project_id': project_id})
     api.task.set_output_project(task_id, project_id, res_project_name)
     my_app.stop()
-    
+
+
+def clean_repo(extracted_path: str):
+    dir_names = [".github", "media"]
+    for dir_name in dir_names:
+        sly.fs.remove_dir(os.path.join(extracted_path, dir_name))
+
 
 def main():
     initial_events = [
