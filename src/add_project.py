@@ -97,10 +97,12 @@ def do(**kwargs):
 
 def clean_repo(extracted_path: str):
     subdirs = get_subdirs(extracted_path)
+    logger.debug(f"Extracted path {extracted_path} contains following subdirectories: {subdirs}")
 
     for subdir in subdirs:
         if subdir != "project":
             sly.fs.remove_dir(os.path.join(extracted_path, subdir))
+    logger.debug(f"Deleted all subdirectories except of 'project' from {extracted_path}")
 
 
 
