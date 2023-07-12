@@ -48,6 +48,7 @@ def do(**kwargs):
 
     github_dir = os.path.join(extracted_path, ".github")
     sly.logger.debug(f"Trying to remove {github_dir}...")
+    sly.fs.remove_dir(github_dir)
     list_dir = os.listdir(extracted_path)
     sly.logger.debug(f"list_dir in extracted_path: {list_dir}")
 
