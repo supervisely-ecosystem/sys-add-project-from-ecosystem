@@ -40,6 +40,9 @@ def do(**kwargs):
     api.app.download_git_archive(ecosystem_item_id, None, ecosystem_item_version, tar_path, log_progress=True)
     with tarfile.open(tar_path) as archive:
         archive.extractall(dest_dir)
+
+    # Remove .github dir in extracted repo.
+    sly.fs.remove_dir(os.path.join(dest_dir, ".github"))
     subdirs = get_subdirs(dest_dir)
     if len(subdirs) != 1:
         raise RuntimeError("Repo is downloaded and extracted, but resulting directory not found")
