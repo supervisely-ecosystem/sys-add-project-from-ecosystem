@@ -40,10 +40,12 @@ def do(**kwargs):
     api.app.download_git_archive(ecosystem_item_id, None, ecosystem_item_version, tar_path, log_progress=True)
     with tarfile.open(tar_path) as archive:
         archive.extractall(dest_dir)
+
     subdirs = get_subdirs(dest_dir)
     if len(subdirs) != 1:
         raise RuntimeError("Repo is downloaded and extracted, but resulting directory not found")
     extracted_path = os.path.join(dest_dir, subdirs[0])
+    clean_repo(extracted_path)
 
     for filename in os.listdir(extracted_path):
         shutil.move(os.path.join(extracted_path, filename), os.path.join(dest_dir, filename))
@@ -91,7 +93,18 @@ def do(**kwargs):
     sly.logger.info('PROJECT_CREATED', extra={'event_type': sly.EventType.PROJECT_CREATED, 'project_id': project_id})
     api.task.set_output_project(task_id, project_id, res_project_name)
     my_app.stop()
-    
+
+
+def clean_repo(extracted_path: str):
+    subdirs = get_subdirs(extracted_path)
+    sly.logger.debug(f"Extracted path {extracted_path} contains following subdirectories: {subdirs}")
+
+    for subdir in subdirs:
+        if subdir != "project":
+            sly.fs.remove_dir(os.path.join(extracted_path, subdir))
+    sly.logger.debug(f"Deleted all subdirectories except of 'project' from {extracted_path}")
+
+
 
 def main():
     initial_events = [
