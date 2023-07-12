@@ -48,10 +48,8 @@ def do(**kwargs):
 
     github_dir = os.path.join(extracted_path, ".github")
     sly.logger.debug(f"Trying to remove {github_dir}...")
-    if not os.path.exists(github_dir):
-        sly.logger.warning(f"{github_dir} does not exist")
-        list_dir = os.listdir(dest_dir)
-        sly.logger.debug(f"list_dir: {list_dir}")
+    list_dir = os.listdir(extracted_path)
+    sly.logger.debug(f"list_dir in extracted_path: {list_dir}")
 
     for filename in os.listdir(extracted_path):
         shutil.move(os.path.join(extracted_path, filename), os.path.join(dest_dir, filename))
