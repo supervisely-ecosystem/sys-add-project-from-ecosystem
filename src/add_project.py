@@ -41,16 +41,17 @@ def do(**kwargs):
     with tarfile.open(tar_path) as archive:
         archive.extractall(dest_dir)
 
-    github_dir = os.path.join(dest_dir, ".github")
+    subdirs = get_subdirs(dest_dir)
+    if len(subdirs) != 1:
+        raise RuntimeError("Repo is downloaded and extracted, but resulting directory not found")
+    extracted_path = os.path.join(dest_dir, subdirs[0])
+
+    github_dir = os.path.join(extracted_path, ".github")
     sly.logger.debug(f"Trying to remove {github_dir}...")
     if not os.path.exists(github_dir):
         sly.logger.warning(f"{github_dir} does not exist")
         list_dir = os.listdir(dest_dir)
         sly.logger.debug(f"list_dir: {list_dir}")
-    subdirs = get_subdirs(dest_dir)
-    if len(subdirs) != 1:
-        raise RuntimeError("Repo is downloaded and extracted, but resulting directory not found")
-    extracted_path = os.path.join(dest_dir, subdirs[0])
 
     for filename in os.listdir(extracted_path):
         shutil.move(os.path.join(extracted_path, filename), os.path.join(dest_dir, filename))
