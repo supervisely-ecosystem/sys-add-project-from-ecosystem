@@ -96,9 +96,9 @@ def do(**kwargs):
 
 
 def clean_repo(extracted_path: str):
-    dir_names = [".github", "media"]
-    for dir_name in dir_names:
-        sly.fs.remove_dir(os.path.join(extracted_path, dir_name))
+    subdirs = [subdir for subdir in os.listdir(extracted_path) if subdir != "project"]
+    for subdir in subdirs:
+        sly.fs.remove_dir(os.path.join(extracted_path, subdir))
 
 
 def main():
