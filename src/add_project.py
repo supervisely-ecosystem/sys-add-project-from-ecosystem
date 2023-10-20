@@ -18,7 +18,9 @@ def do(**kwargs):
     task_id = os.environ["TASK_ID"]
     team_id = os.environ['modal.state.teamId']
     workspace_id = os.environ['modal.state.workspaceId']
-    project_name = os.environ['modal.state.projectName']
+    project_name = os.environ.get("modal.state.projectName", "")
+    project_name = project_name.replace("\\", "").replace("|", "").replace("/", "")
+
     ecosystem_item_git_url = os.environ['modal.state.slyEcosystemItemGitUrl']
     ecosystem_item_version = os.environ.get('modal.state.slyEcosystemItemVersion', "master")
     ecosystem_item_id = os.environ['modal.state.slyEcosystemItemId']

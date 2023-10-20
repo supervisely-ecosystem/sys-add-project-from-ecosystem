@@ -9,5 +9,12 @@
                description="If the name already exists, it will be auto-renamed
                by adding a numerical suffix to the end (e.g. *_07)">
         <el-input v-model="state.projectName"></el-input>
+        <div v-if="/[\/|\\]/.test(state.projectName)" class="mt5 mb5">
+            <i class="zmdi zmdi-alert-triangle" style="color: #ed4242"></i>
+            <span style="color: #ed4242"
+            >Please replace invalid symbols in the project name (|, /, or
+            \).</span
+            >
+        </div>
     </sly-field>
 </div>
