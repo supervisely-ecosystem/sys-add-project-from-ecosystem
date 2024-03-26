@@ -5,7 +5,7 @@
     "system"
   ],
   "description": "Adds project from ecosystem, works with all project types: images / videos / 3d / dicom",
-  "docker_image": "supervisely/system:6.73.51",
+  "docker_image": "supervisely/system:6.73.59",
   "main_script": "src/add_project.py",
   "modal_template": "src/modal.html",
   "modal_template_state": {
