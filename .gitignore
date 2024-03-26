@@ -1,1 +1,5 @@
 /secret_debug.env
+.venv
+debug
+.DS_Store
+__pycache__

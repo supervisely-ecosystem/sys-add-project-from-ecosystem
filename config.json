@@ -1,23 +1,24 @@
 {
-    "name": "Add project from ecosystem",
-    "type": "app",
-    "categories": [
-        "system"
-    ],
-    "description": "Adds project from ecosystem, works with all project types: images / videos / 3d / dicom",
-    "docker_image": "supervisely/system:6.72.161",
-    "main_script": "src/add_project.py",
-    "modal_template": "src/modal.html",
-    "modal_template_state": {
-        "teamId": null,
-        "workspaceId": null,
-        "projectName": ""
-    },
-    "gui_template": null,
-    "task_location": "workspace_tasks",
-    "isolate": true,
-    "system": true,
-    "icon": "https://user-images.githubusercontent.com/12828725/192745216-b395679c-de58-47a2-963a-b43378b5680b.png",
-    "icon_background": "#FFFFFF",
-    "headless": true
+  "name": "Add project from ecosystem",
+  "type": "app",
+  "categories": [
+    "system"
+  ],
+  "description": "Adds project from ecosystem, works with all project types: images / videos / 3d / dicom",
+  "docker_image": "supervisely/system:6.73.60",
+  "main_script": "src/add_project.py",
+  "modal_template": "src/modal.html",
+  "modal_template_state": {
+    "teamId": null,
+    "workspaceId": null,
+    "projectName": ""
+  },
+  "gui_template": null,
+  "task_location": "workspace_tasks",
+  "isolate": true,
+  "system": true,
+  "icon": "https://user-images.githubusercontent.com/12828725/192745216-b395679c-de58-47a2-963a-b43378b5680b.png",
+  "icon_background": "#FFFFFF",
+  "headless": true,
+  "min_instance_version": "6.9.4"
 }
