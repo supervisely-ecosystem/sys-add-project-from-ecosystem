@@ -119,7 +119,9 @@ def do(**kwargs):
         extra={"event_type": sly.EventType.PROJECT_CREATED, "project_id": project_id},
     )
     api.task.set_output_project(task_id, project_id, res_project_name)
+    # ---------------------------------------- Workflow Output --------------------------------------- #
     api.app.add_output_project(project_id)
+    # ----------------------------------------------- - ---------------------------------------------- #
     my_app.stop()
 
 
