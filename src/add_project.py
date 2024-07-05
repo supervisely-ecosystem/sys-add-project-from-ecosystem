@@ -8,6 +8,7 @@ from supervisely.io.fs import silent_remove, remove_dir, get_subdirs
 from supervisely.project.pointcloud_project import upload_pointcloud_project
 from supervisely.project.pointcloud_episode_project import upload_pointcloud_episode_project
 from supervisely.app.v1.app_service import AppService
+from wokflow import Workflow
 
 
 if sly.is_development():
@@ -46,7 +47,7 @@ def do(**kwargs):
     )
 
     api = sly.Api.from_env()
-
+    workflow = Workflow(api)
     # dest_dir = "/sly_task_data/repo"
     dest_dir = my_app.data_dir
     # sly.fs.mkdir(dest_dir)
@@ -119,8 +120,8 @@ def do(**kwargs):
         extra={"event_type": sly.EventType.PROJECT_CREATED, "project_id": project_id},
     )
     api.task.set_output_project(task_id, project_id, res_project_name)
-    # ---------------------------------------- Workflow Output --------------------------------------- #
-    api.app.add_output_project(project_id)
+    # ---------------------------------------- Workflow Output --------------------------------------- #    
+    workflow.add_output(project_id)
     # ----------------------------------------------- - ---------------------------------------------- #
     my_app.stop()
 
