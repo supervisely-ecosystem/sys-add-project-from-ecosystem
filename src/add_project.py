@@ -8,7 +8,7 @@ from supervisely.io.fs import silent_remove, remove_dir, get_subdirs
 from supervisely.project.pointcloud_project import upload_pointcloud_project
 from supervisely.project.pointcloud_episode_project import upload_pointcloud_episode_project
 from supervisely.app.v1.app_service import AppService
-from wokflow import Workflow
+from workflow import Workflow
 
 
 if sly.is_development():
