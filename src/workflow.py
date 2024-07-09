@@ -1,5 +1,4 @@
 import supervisely as sly
-import os
 
 
 def check_compatibility(func):
@@ -20,11 +19,11 @@ class Workflow:
         self._min_instance_version = (
             "6.9.31" if min_instance_version is None else min_instance_version
         )
-    
+
     def check_instance_ver_compatibility(self):
         if not self.api.is_version_supported(self._min_instance_version):
             sly.logger.info(
-                f"Supervisely instance version {self.api.instance_version} does not support workflow and versioning features."
+                f"Supervisely instance version {self.api.instance_version} does not support workflow features."
             )
             if not sly.is_community():
                 sly.logger.info(
@@ -32,7 +31,7 @@ class Workflow:
                 )
             return False
         return True
-    
+
     @check_compatibility
     def add_input(self):
         raise NotImplementedError("Method is not implemented yet.")
@@ -40,4 +39,3 @@ class Workflow:
     @check_compatibility
     def add_output(self, project_id: int):
         self.api.app.workflow.add_output_project(project_id)
-
