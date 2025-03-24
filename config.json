@@ -18,5 +18,5 @@
   "icon": "https://user-images.githubusercontent.com/12828725/192745216-b395679c-de58-47a2-963a-b43378b5680b.png",
   "icon_background": "#FFFFFF",
   "headless": true,
-  "min_instance_version": "6.9.4"
+  "min_instance_version": "6.12.34"
 }
