@@ -8,6 +8,8 @@ from supervisely.io.fs import silent_remove, remove_dir, get_subdirs
 from supervisely.project.pointcloud_project import upload_pointcloud_project
 from supervisely.project.pointcloud_episode_project import upload_pointcloud_episode_project
 from supervisely.app.v1.app_service import AppService
+from supervisely.project.project_settings import LabelingInterface
+from src.functions import upload_overlay_project
 from workflow import Workflow
 
 
@@ -86,11 +88,17 @@ def do(**kwargs):
     with open(os.path.join(dest_dir, "project", "meta.json")) as json_file:
         meta_json = json.load(json_file)
 
-    project_type = sly.ProjectMeta.from_json(meta_json).project_type
+    project_meta = sly.ProjectMeta.from_json(meta_json)
+    project_type = project_meta.project_type
     if project_type == str(sly.ProjectType.IMAGES):
-        project_id, res_project_name = sly.upload_project(
-            dest_dir, api, workspace_id, project_name, log_progress=True
-        )
+        if project_meta.labeling_interface == LabelingInterface.OVERLAY:
+            project_id = upload_overlay_project(
+                api, dest_dir, workspace_id, project_name, project_meta, log_progress=True
+            )
+        else:
+            project_id, res_project_name = sly.upload_project(
+                dest_dir, api, workspace_id, project_name, log_progress=True
+            )
     elif project_type == str(sly.ProjectType.VIDEOS):
         project_id, res_project_name = sly.upload_video_project(
             dest_dir, api, workspace_id, project_name, log_progress=True
