@@ -143,4 +143,4 @@ def upload_overlay_project(
         api.project.remove(project.id)
         raise RuntimeError("Failed to import overlay project. No valid overlay items were found.")
 
-    return project.id
+    return project.id, project.name

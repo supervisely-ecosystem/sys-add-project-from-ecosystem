@@ -92,9 +92,10 @@ def do(**kwargs):
     project_type = project_meta.project_type
     if project_type == str(sly.ProjectType.IMAGES):
         if project_meta.labeling_interface == LabelingInterface.OVERLAY:
-            project_id = upload_overlay_project(
+            project_id, res_project_name = upload_overlay_project(
                 api, os.path.join(dest_dir, "project"), workspace_id, project_name, project_meta
             )
+
         else:
             project_id, res_project_name = sly.upload_project(
                 dest_dir, api, workspace_id, project_name, log_progress=True
