@@ -4,6 +4,7 @@ import os
 from supervisely._utils import batched
 from supervisely.io.fs import get_file_ext
 
+
 def upload_overlay_project(
     api: sly.Api,
     project_dir: str,
@@ -44,12 +45,6 @@ def upload_overlay_project(
 
         dataset = api.dataset.create(project.id, dataset_name, change_name_if_conflict=True)
         meta_dir = os.path.join(dataset_path, "meta")
-
-        raw_ann_names = []
-        if sly.fs.dir_exists(ann_dir):
-            raw_ann_names = [
-                name for name in os.listdir(ann_dir) if get_file_ext(name) == ".json"
-            ]
 
         items = []
         for image_path in image_paths:

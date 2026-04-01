@@ -93,7 +93,8 @@ def do(**kwargs):
     if project_type == str(sly.ProjectType.IMAGES):
         if project_meta.labeling_interface == LabelingInterface.OVERLAY:
             project_id = upload_overlay_project(
-                api, dest_dir, workspace_id, project_name, project_meta)
+                api, os.path.join(dest_dir, "project"), workspace_id, project_name, project_meta
+            )
         else:
             project_id, res_project_name = sly.upload_project(
                 dest_dir, api, workspace_id, project_name, log_progress=True
@@ -127,7 +128,7 @@ def do(**kwargs):
         extra={"event_type": sly.EventType.PROJECT_CREATED, "project_id": project_id},
     )
     api.task.set_output_project(task_id, project_id, res_project_name)
-    # ---------------------------------------- Workflow Output --------------------------------------- #    
+    # ---------------------------------------- Workflow Output --------------------------------------- #
     workflow.add_output(project_id)
     # ----------------------------------------------- - ---------------------------------------------- #
     my_app.stop()
@@ -154,7 +155,8 @@ def main():
         }
     ]
 
-    my_app.run(initial_events=initial_events)
+    # my_app.run(initial_events=initial_events)
+    do(state=None, context=None)
 
 
 if __name__ == "__main__":
