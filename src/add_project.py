@@ -9,7 +9,7 @@ from supervisely.project.pointcloud_project import upload_pointcloud_project
 from supervisely.project.pointcloud_episode_project import upload_pointcloud_episode_project
 from supervisely.app.v1.app_service import AppService
 from supervisely.project.project_settings import LabelingInterface
-from src.functions import upload_overlay_project, OverlayInterfaceUnavailableError
+from src.functions import upload_overlay_project
 from workflow import Workflow
 
 
@@ -92,17 +92,9 @@ def do(**kwargs):
     project_type = project_meta.project_type
     if project_type == str(sly.ProjectType.IMAGES):
         if project_meta.labeling_interface == LabelingInterface.OVERLAY:
-            try:
-                project_id, res_project_name = upload_overlay_project(
+            project_id, res_project_name = upload_overlay_project(
                     api, os.path.join(dest_dir, "project"), workspace_id, project_name, project_meta
                 )
-            except OverlayInterfaceUnavailableError as error:
-                sly.logger.warning(
-                    "Overlay import is unavailable for current package.",
-                    extra={"details": str(error)},
-                )
-                my_app.stop()
-                return
 
         else:
             project_id, res_project_name = sly.upload_project(
