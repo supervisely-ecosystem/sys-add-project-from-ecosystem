@@ -5,6 +5,10 @@ from supervisely._utils import batched
 from supervisely.io.fs import get_file_ext
 
 
+class OverlayInterfaceUnavailableError(RuntimeError):
+    pass
+
+
 def upload_overlay_project(
     api: sly.Api,
     project_dir: str,
@@ -16,7 +20,33 @@ def upload_overlay_project(
 ) -> int:
     project = api.project.create(workspace_id, project_name, change_name_if_conflict=True)
     api.project.update_meta(project.id, meta)
-    api.project.set_overlay_settings(project.id)
+    try:
+        api.project.set_overlay_settings(project.id)
+    except Exception as error:
+        try:
+            api.app.set_output_text(
+                sly.env.task_id(),
+                "Failed to import project",
+                description=(
+                    "This project uses Overlay mode, which is available only in the "
+                    "Images MAX package. Please choose another project from Ecosystem "
+                    "or use a workspace with Images MAX support."
+                ),
+                zmdi_icon="zmdi-alert-triangle",
+                icon_color="#FFA500",
+                background_color="#FFE8BE",
+            )
+        except Exception:
+            sly.logger.warning("Failed to set warning output text.", exc_info=True)
+
+        try:
+            api.project.remove(project.id)
+        except Exception:
+            sly.logger.warning(
+                f"Failed to remove project '{project.name}' ({project.id}) after overlay settings error.",
+                exc_info=True,
+            )
+        raise OverlayInterfaceUnavailableError(str(error)) from error
     uploaded_items_cnt = 0
 
     for dataset_name in sorted(os.listdir(project_dir)):
