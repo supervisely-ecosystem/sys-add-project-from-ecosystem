@@ -4,7 +4,7 @@
   "categories": [
     "system"
   ],
-  "description": "Adds project from ecosystem, works with all project types: images / videos / 3d / dicom",
+  "description": "Adds project from ecosystem, works with all project types: images / videos / 3d / dicom / audio",
   "docker_image": "supervisely/base-py-sdk-hardened:6.74.42",
   "main_script": "src/add_project.py",
   "modal_template": "src/modal.html",
