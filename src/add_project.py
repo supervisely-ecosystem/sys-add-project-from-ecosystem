@@ -118,6 +118,11 @@ def do(**kwargs):
         project_id, res_project_name = upload_pointcloud_episode_project(
             dest_dir, api, workspace_id, project_name, log_progress=True
         )
+    elif project_type == str(sly.ProjectType.AUDIO):
+        dest_dir = os.path.join(dest_dir, "project")
+        project_id, res_project_name = sly.upload_audio_project(
+            dest_dir, api, workspace_id, project_name, log_progress=True
+        )
     else:
         raise NotImplementedError("Unknown project type: {}".format(project_type))
 
