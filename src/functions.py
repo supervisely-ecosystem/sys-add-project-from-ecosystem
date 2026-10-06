@@ -255,7 +255,7 @@ def upload_audio_references(api: sly.Api, project_id: int, audio_dir: str) -> No
                 if file_info is not None:
                     reference = reference._replace(
                         url=file_info.full_storage_url,
-                        mime_type=file_info.mime or reference.mime_type,
+                        mime_type=reference.mime_type or file_info.mime,
                     )
                 new_references.append(reference)
             if new_references != references:
