@@ -1,6 +1,7 @@
-from typing import Callable, Optional
+from typing import Callable, Optional, Set
 import supervisely as sly
 import os
+import re
 from supervisely._utils import batched
 from supervisely.io.fs import get_file_ext
 
@@ -163,3 +164,63 @@ def upload_overlay_project(
         raise RuntimeError("Failed to import overlay project. No valid overlay items were found.")
 
     return project.id, project.name
+
+
+USAGE_LIMIT_STATUS_CODE = 402
+
+
+def get_usage_limit_error(exc: BaseException) -> Optional[str]:
+    """Returns the server message if the exception (or its cause) is HTTP 402 Usage limits reached."""
+    seen = set()
+    while exc is not None and id(exc) not in seen:
+        seen.add(id(exc))
+        response = getattr(exc, "response", None)
+        if getattr(response, "status_code", None) == USAGE_LIMIT_STATUS_CODE:
+            try:
+                body = response.json()
+                message = body.get("error") or body.get("message") or body.get("details")
+            except Exception:
+                message = None
+            return str(message or response.text or "Usage limits reached")
+        if "Usage limits reached" in str(exc):
+            return str(exc)
+        exc = exc.__cause__ or exc.__context__
+    return None
+
+
+def remove_partial_projects(
+    api: sly.Api, workspace_id: int, project_name: str, existing_ids: Set[int]
+) -> None:
+    """Removes projects this task created in the workspace before the upload failed."""
+    try:
+        my_id = api.user.get_my_info().id
+        name_pattern = re.compile(re.escape(project_name) + r"(_\d+)?")
+        for project in api.project.get_list(workspace_id):
+            if (
+                project.id not in existing_ids
+                and project.created_by_id == my_id
+                and name_pattern.fullmatch(project.name)
+            ):
+                sly.logger.info(f"Removing partially uploaded project id={project.id}")
+                api.project.remove(project.id)
+    except Exception:
+        sly.logger.warning("Failed to remove partially uploaded project.", exc_info=True)
+
+
+def report_usage_limit(api: sly.Api, task_id: int, message: str) -> None:
+    message = message.strip().rstrip(".")
+    sly.logger.warning(f"Project was not added: {message}")
+    try:
+        api.app.set_output_text(
+            task_id,
+            "Plan limit reached",
+            description=(
+                f"{message}. The project was not added. "
+                "Delete projects you no longer need or upgrade your plan, then try again."
+            ),
+            zmdi_icon="zmdi-alert-triangle",
+            icon_color="#FFA500",
+            background_color="#FFE8BE",
+        )
+    except Exception:
+        sly.logger.warning("Failed to set warning output text.", exc_info=True)
