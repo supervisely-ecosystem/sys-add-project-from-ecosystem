@@ -2,6 +2,7 @@ from typing import Callable, Optional, Set
 import supervisely as sly
 import os
 import re
+from urllib.parse import urlparse
 from supervisely._utils import batched
 from supervisely.io.fs import get_file_ext
 
@@ -224,3 +225,40 @@ def report_usage_limit(api: sly.Api, task_id: int, message: str) -> None:
         )
     except Exception:
         sly.logger.warning("Failed to set warning output text.", exc_info=True)
+
+
+def upload_audio_references(api: sly.Api, project_id: int, audio_dir: str) -> None:
+    """Copies the recordings bundled in the repo's audio/ folder to Team Files and points
+    the images' audio references at them, so they play from the instance, not from GitHub."""
+    audio_files = {name: os.path.join(audio_dir, name) for name in os.listdir(audio_dir)}
+    project = api.project.get_info_by_id(project_id)
+    uploaded = {}
+    for dataset in api.dataset.get_list(project_id, recursive=True):
+        for image in api.image.get_list(dataset.id):
+            references = api.image.get_audio_references(image.id)
+            new_references = []
+            for reference in references:
+                name = os.path.basename(urlparse(reference.url).path)
+                if name in audio_files and name not in uploaded:
+                    remote_path = f"/audio-references/{project_id}/{name}"
+                    try:
+                        uploaded[name] = api.file.upload(
+                            project.team_id, audio_files[name], remote_path
+                        )
+                    except Exception:
+                        sly.logger.warning(
+                            f"Failed to upload audio '{name}', it keeps its original link.",
+                            exc_info=True,
+                        )
+                        uploaded[name] = None
+                file_info = uploaded.get(name)
+                if file_info is not None:
+                    reference = reference._replace(
+                        url=file_info.full_storage_url,
+                        mime_type=reference.mime_type or file_info.mime,
+                    )
+                new_references.append(reference)
+            if new_references != references:
+                api.image.set_audio_references(image.id, new_references)
+    uploaded_cnt = len([info for info in uploaded.values() if info is not None])
+    sly.logger.info(f"Uploaded {uploaded_cnt} audio references to Team Files")
