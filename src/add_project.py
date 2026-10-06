@@ -11,6 +11,7 @@ from supervisely.app.v1.app_service import AppService
 from supervisely.project.project_settings import LabelingInterface
 from src.functions import (
     upload_overlay_project,
+    upload_audio_references,
     get_usage_limit_error,
     remove_partial_projects,
     report_usage_limit,
@@ -135,6 +136,9 @@ def upload_project(api, dest_dir, workspace_id, project_name, project_meta):
             project_id, res_project_name = sly.upload_project(
                 dest_dir, api, workspace_id, project_name, log_progress=True
             )
+            audio_dir = os.path.join(dest_dir, "audio")
+            if sly.fs.dir_exists(audio_dir):
+                upload_audio_references(api, project_id, audio_dir)
     elif project_type == str(sly.ProjectType.VIDEOS):
         project_id, res_project_name = sly.upload_video_project(
             dest_dir, api, workspace_id, project_name, log_progress=True
@@ -170,10 +174,13 @@ def clean_repo(extracted_path: str):
         f"Extracted path {extracted_path} contains following subdirectories: {subdirs}"
     )
 
+    # audio/ holds the recordings that images with audio references point to
     for subdir in subdirs:
-        if subdir != "project":
+        if subdir not in ("project", "audio"):
             sly.fs.remove_dir(os.path.join(extracted_path, subdir))
-    sly.logger.debug(f"Deleted all subdirectories except of 'project' from {extracted_path}")
+    sly.logger.debug(
+        f"Deleted all subdirectories except of 'project' and 'audio' from {extracted_path}"
+    )
 
 
 def main():
