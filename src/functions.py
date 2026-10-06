@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Set
+from typing import Callable, List, Optional, Set
 import supervisely as sly
 import os
 import re
@@ -189,10 +189,12 @@ def get_usage_limit_error(exc: BaseException) -> Optional[str]:
     return None
 
 
-def remove_partial_projects(
+def remove_empty_partial_projects(
     api: sly.Api, workspace_id: int, project_name: str, existing_ids: Set[int]
-) -> None:
-    """Removes projects this task created in the workspace before the upload failed."""
+) -> List[sly.ProjectInfo]:
+    """Removes empty projects this task created in the workspace before the upload failed.
+    Returns the partially uploaded projects that already have items and were kept."""
+    kept = []
     try:
         my_id = api.user.get_my_info().id
         name_pattern = re.compile(re.escape(project_name) + r"(_\d+)?")
@@ -202,21 +204,37 @@ def remove_partial_projects(
                 and project.created_by_id == my_id
                 and name_pattern.fullmatch(project.name)
             ):
-                sly.logger.info(f"Removing partially uploaded project id={project.id}")
-                api.project.remove(project.id)
+                project = api.project.get_info_by_id(project.id)
+                if project.items_count:
+                    sly.logger.info(
+                        f"Keeping partially uploaded project id={project.id} "
+                        f"with {project.items_count} items"
+                    )
+                    kept.append(project)
+                else:
+                    sly.logger.info(f"Removing empty project id={project.id}")
+                    api.project.remove(project.id)
     except Exception:
-        sly.logger.warning("Failed to remove partially uploaded project.", exc_info=True)
+        sly.logger.warning("Failed to clean up partially uploaded project.", exc_info=True)
+    return kept
 
 
-def report_usage_limit(api: sly.Api, task_id: int, message: str) -> None:
+def report_usage_limit(
+    api: sly.Api, task_id: int, message: str, kept: Optional[List[sly.ProjectInfo]] = None
+) -> None:
     message = message.strip().rstrip(".")
-    sly.logger.warning(f"Project was not added: {message}")
+    if kept:
+        added = ", ".join(f"'{p.name}' ({p.items_count} items)" for p in kept)
+        result = f"The project was added partially: {added}"
+    else:
+        result = "The project was not added"
+    sly.logger.warning(f"{result}: {message}")
     try:
         api.app.set_output_text(
             task_id,
             "Plan limit reached",
             description=(
-                f"{message}. The project was not added. "
+                f"{message}. {result}. "
                 "Delete projects you no longer need or upgrade your plan, then try again."
             ),
             zmdi_icon="zmdi-alert-triangle",

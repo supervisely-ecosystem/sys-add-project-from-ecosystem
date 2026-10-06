@@ -13,7 +13,7 @@ from src.functions import (
     upload_overlay_project,
     upload_audio_references,
     get_usage_limit_error,
-    remove_partial_projects,
+    remove_empty_partial_projects,
     report_usage_limit,
 )
 from workflow import Workflow
@@ -105,8 +105,10 @@ def do(**kwargs):
         if usage_limit_error is None:
             raise
         # 402 is final: finish normally so the job is not restarted until its backoff limit
-        remove_partial_projects(api, workspace_id, project_name, existing_project_ids)
-        report_usage_limit(api, task_id, usage_limit_error)
+        kept = remove_empty_partial_projects(
+            api, workspace_id, project_name, existing_project_ids
+        )
+        report_usage_limit(api, task_id, usage_limit_error, kept)
         my_app.stop()
         return
 
