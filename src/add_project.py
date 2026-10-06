@@ -9,7 +9,12 @@ from supervisely.project.pointcloud_project import upload_pointcloud_project
 from supervisely.project.pointcloud_episode_project import upload_pointcloud_episode_project
 from supervisely.app.v1.app_service import AppService
 from supervisely.project.project_settings import LabelingInterface
-from src.functions import upload_overlay_project
+from src.functions import (
+    upload_overlay_project,
+    get_usage_limit_error,
+    remove_partial_projects,
+    report_usage_limit,
+)
 from workflow import Workflow
 
 
@@ -89,6 +94,36 @@ def do(**kwargs):
         meta_json = json.load(json_file)
 
     project_meta = sly.ProjectMeta.from_json(meta_json)
+    existing_project_ids = {p.id for p in api.project.get_list(workspace_id)}
+    try:
+        project_id, res_project_name = upload_project(
+            api, dest_dir, workspace_id, project_name, project_meta
+        )
+    except Exception as e:
+        usage_limit_error = get_usage_limit_error(e)
+        if usage_limit_error is None:
+            raise
+        # 402 is final: finish normally so the job is not restarted until its backoff limit
+        remove_partial_projects(api, workspace_id, project_name, existing_project_ids)
+        report_usage_limit(api, task_id, usage_limit_error)
+        my_app.stop()
+        return
+
+    sly.logger.info("Project info: id={!r}, name={!r}".format(project_id, res_project_name))
+
+    # to show created project in tasks list (output column)
+    sly.logger.info(
+        "PROJECT_CREATED",
+        extra={"event_type": sly.EventType.PROJECT_CREATED, "project_id": project_id},
+    )
+    api.task.set_output_project(task_id, project_id, res_project_name)
+    # ---------------------------------------- Workflow Output --------------------------------------- #
+    workflow.add_output(project_id)
+    # ----------------------------------------------- - ---------------------------------------------- #
+    my_app.stop()
+
+
+def upload_project(api, dest_dir, workspace_id, project_name, project_meta):
     project_type = project_meta.project_type
     if project_type == str(sly.ProjectType.IMAGES):
         if project_meta.labeling_interface == LabelingInterface.OVERLAY:
@@ -126,18 +161,7 @@ def do(**kwargs):
     else:
         raise NotImplementedError("Unknown project type: {}".format(project_type))
 
-    sly.logger.info("Project info: id={!r}, name={!r}".format(project_id, res_project_name))
-
-    # to show created project in tasks list (output column)
-    sly.logger.info(
-        "PROJECT_CREATED",
-        extra={"event_type": sly.EventType.PROJECT_CREATED, "project_id": project_id},
-    )
-    api.task.set_output_project(task_id, project_id, res_project_name)
-    # ---------------------------------------- Workflow Output --------------------------------------- #
-    workflow.add_output(project_id)
-    # ----------------------------------------------- - ---------------------------------------------- #
-    my_app.stop()
+    return project_id, res_project_name
 
 
 def clean_repo(extracted_path: str):
